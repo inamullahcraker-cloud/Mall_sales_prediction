@@ -1,0 +1,249 @@
+# ==================================================
+# Project Information
+# ==================================================
+project:
+
+  name: store_item_sales_forecasting
+
+  version: 1.0.0
+
+  author: Inamullah
+
+# ==================================================
+# Random Seed
+# ==================================================
+seed: 42
+
+# ==================================================
+# Dataset
+# ==================================================
+dataset:
+
+  raw_data_path: data/raw/train.csv
+
+  processed_data_path: data/processed/
+
+  date_column: date
+
+  target_column: sales
+
+  group_columns:
+
+    - store
+
+    - item
+
+# ==================================================
+# Time Series Split
+# ==================================================
+split:
+
+  strategy: date
+
+  date_column: date
+
+  train_end: "2016-12-31"
+
+  validation_end: "2017-06-30"
+
+  test_end: "2017-12-31"
+
+  sort: true
+# ==================================================
+# Features
+# ==================================================
+features:
+
+  numerical:
+
+    - year
+    - quarter
+    - month
+    - weekofyear
+    - day
+    - dayofweek
+    - dayofyear
+    - is_weekend
+    - is_month_start
+    - is_month_end
+
+    - lag_1
+    - lag_2
+    - lag_3
+    - lag_7
+    - lag_14
+    - lag_28
+
+    - rolling_mean_7
+    - rolling_std_7
+   
+
+    - rolling_mean_14
+    - rolling_std_14
+
+
+    - rolling_mean_30
+    - rolling_std_30
+    
+
+    - rolling_mean_90
+    - rolling_std_90
+   
+
+    - rolling_mean_365
+    - rolling_std_365
+    
+
+  categorical:
+
+    - store
+
+    - item
+
+# ==================================================
+# Date Features
+# ==================================================
+date_features:
+
+  enabled: true
+
+  extract:
+
+    - year
+    - quarter
+    - month
+    - weekofyear
+    - day
+    - dayofweek
+    - dayofyear
+    - is_weekend
+    - is_month_start
+    - is_month_end
+
+# ==================================================
+# Lag Features
+# ==================================================
+lag_features:
+
+  enabled: true
+
+  lags:
+
+    - 1
+    - 2
+    - 3
+    - 7
+    - 14
+    - 28
+
+# ==================================================
+# Rolling Features
+# ==================================================
+rolling_features:
+
+  enabled: true
+
+  windows:
+
+    - 7
+    - 14
+    - 30
+    - 90
+    - 365
+
+  statistics:
+
+    - mean
+    - std
+
+cyclic_features:
+
+  enabled: true
+
+  columns:
+
+    month: 12
+
+    dayofweek: 7
+
+    dayofyear: 365
+# ==================================================
+# Missing Values
+# ==================================================
+missing_values:
+
+  strategy: fill_zero
+
+# ==================================================
+# Preprocessing
+# ==================================================
+preprocessing:
+
+  scaling: standard
+
+  encoding: onehot
+
+  missing_strategy_numeric: median
+
+  missing_strategy_categorical: most_frequent
+
+# ==================================================
+# Model
+# ==================================================
+model:
+
+  type: XGBRegressor
+
+  parameters:
+
+    learning_rate: 0.05
+
+    n_estimators: 500
+
+    max_depth: 8
+
+    random_state: 42
+
+# ==================================================
+# Output
+# ==================================================
+output:
+
+  train_features: data/processed/X_train.csv
+
+  validation_features: data/processed/X_valid.csv
+
+  test_features: data/processed/X_test.csv
+
+  train_target: data/processed/y_train.csv
+
+  validation_target: data/processed/y_valid.csv
+
+  test_target: data/processed/y_test.csv
+
+  model_path: models/pipeline.joblib
+
+  metrics_path: reports/metrics.json
+  prediction_path: reports/predictions.csv
+  figure_dir: reports/figures
+
+  feature_importance_path: reports/feature_importance.csv
+
+  residuals_path: reports/residuals.csv
+# ==================================================
+# Logging
+# ==================================================
+logging:
+
+  level: INFO
+
+  log_dir: logs/
+
+# ==================================================
+# API
+# ==================================================
+api:
+
+  host: 0.0.0.0
+
+  port: 8000

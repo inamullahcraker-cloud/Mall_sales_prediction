@@ -1,0 +1,14 @@
+"""
+Prediction tests.
+"""
+
+import pandas as pd
+
+from src.predict import Predictor
+
+
+def test_predictor_exists():
+
+    predictor = Predictor()
+
+    assert predictor is not None
